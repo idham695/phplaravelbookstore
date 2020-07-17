@@ -47,8 +47,13 @@ Route::prefix('v1')->group(function () {
     Route::get('books/top/{count}', 'BookController@top');
     Route::get('books/slug/{slug}', 'BookController@slug');
     Route::get('books/search/{keyword}', 'BookController@search');
+    Route::get('provinces', 'ShopController@provinces');
+    Route::get('cities', 'ShopController@cities');
+    Route::get('couriers', 'ShopController@couriers');
     Route::middleware('auth:api')->group(function () {
            Route::post('logout', 'AuthController@logout');
+           Route::post('shipping', 'ShopController@shipping');
+           Route::post('services', 'ShopController@services');
     });
 });
 Route::middleware(['cors'])->group(function () {
