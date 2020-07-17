@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import About from "../views/About.vue";
+import store from "../store/index";
 
 Vue.use(VueRouter);
 
@@ -40,12 +41,39 @@ const router = new VueRouter({
       component: () => import("../views/Book.vue"),
     },
     {
+      path: "/checkout",
+      name: "checkout",
+      component: () => import("../views/Checkout.vue"),
+      meta: { auth: true },
+    },
+    {
       path: "*",
       redirect: {
         name: "home",
       },
     },
   ],
+});
+router.beforeEach((to, from, next) => {
+  // jika routing ada meta auth nya
+  if (to.matched.some((record) => record.meta.auth)) {
+    // jika user adalah guest
+    if (store.getters["auth/guest"]) {
+      // tampilkan pesan bahwa dia harus login dulu
+      store.dispatch("alert/set", {
+        status: true,
+        text: "Login First",
+        color: "error",
+      });
+      store.dispatch("setPrevUrl", to.path);
+      // tampilkan form login
+      store.dispatch("dialog/setComponent", "login");
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

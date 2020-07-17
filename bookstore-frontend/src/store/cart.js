@@ -15,14 +15,21 @@ export default {
       });
     },
     update: (state, payload) => {
-      state.carts.push({
+      let idx = state.carts.indexOf(payload);
+      state.carts.splice(idx, 1, {
         id: payload.id,
         title: payload.title,
         cover: payload.cover,
         price: payload.price,
         weight: payload.weight,
-        quantity: ++payload.quantity,
+        quantity: payload.quantity,
       });
+      if (payload.quantity <= 0) {
+        state.carts.splice(idx, 1);
+      }
+    },
+    set: (state, payload) => {
+      state.carts = payload;
     },
   },
   actions: {
@@ -31,9 +38,19 @@ export default {
       if (!cartItem) {
         commit("insert", payload);
       } else {
-        commit("update", payload);
+        cartItem.quantity++;
+        commit("update", cartItem);
       }
     },
+    // remove: ({ state, commit }, payload) => {
+    //   let cartItem = state.carts.find((item) => item.id === payload.id);
+    //   if (!cartItem) {
+    //     commit("insert", payload);
+    //   } else {
+    //     cartItem.quantity--;
+    //     commit("update", cartItem);
+    //   }
+    // },
   },
   getters: {
     carts: (state) => state.carts,
