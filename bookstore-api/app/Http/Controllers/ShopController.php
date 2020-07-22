@@ -41,7 +41,7 @@ class ShopController extends Controller
             $user->city_id = $request->city_id;
             if ($user->save()) {
                 $status = "success";
-                $message = "Update Shipping Success";
+                $message = "Update shipping Success";
                 $data = $user->toArray();
             } else {
                 $message = "Update Shipping failed";
