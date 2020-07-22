@@ -160,7 +160,7 @@ export default {
   methods: {
     ...mapActions({
       setAlert: "alert/set",
-      aetAuth: "auth/set",
+      setAuth: "auth/set",
       setProvices: "region/setProvinces",
       setCities: "region/setCities",
       setCart: "cart/set"

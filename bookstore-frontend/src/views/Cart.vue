@@ -45,10 +45,10 @@
             <v-flex pa-1 xs6>
               Total Price ({{totalQuantity}} items)
               <br />
-              <span class="title">Rp. {{totalPrice}}</span>
+              <span class="title">Rp. {{totalPrice.toLocaleString('id-ID')}}</span>
             </v-flex>
             <v-flex pa-1 xs6 text-right>
-              <v-btn color="primary" @click="checkout()" :disabled="totalQuantity==0">
+              <v-btn color="primary" @click="checkout" :disabled="totalQuantity==0">
                 <v-icon>mdi-cart-arrow-right</v-icon>&nbsp;
                 Checkout
               </v-btn>

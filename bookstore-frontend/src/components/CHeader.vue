@@ -21,7 +21,7 @@
         <v-icon>shopping_cart</v-icon>
       </v-badge>
     </v-btn>-->
-    <v-btn icon @click="cart">
+    <v-btn icon @click="cart()">
       <v-badge left overlap color="orange">
         <span slot="badge" v-if="countCart>0">{{countCart}}</span>
         <span slot="badge" v-else>0</span>
