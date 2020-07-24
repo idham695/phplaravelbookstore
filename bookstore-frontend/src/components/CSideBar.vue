@@ -65,20 +65,22 @@
     </v-list>
     <v-list class="pt-0" dense>
       <v-divider></v-divider>
-      <!-- menu navigasi pada properti data item -->
-      <v-list-item
-        v-for="(item, index) in items"
-        :key="index"
-        :href="item.route"
-        :to="{ name: item.route }"
-      >
-        <v-list-item-action>
-          <v-icon>{{ item.icon }}</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <template v-for="(item,index) in items">
+        <!-- menu navigasi pada properti data item -->
+        <v-list-item
+          :key="index"
+          :href="item.route"
+          :to="{ name: item.route }"
+          v-if="!item.auth || (item.auth && !guest)"
+        >
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -90,15 +92,17 @@ export default {
   data: () => ({
     items: [
       { title: "Home", icon: "dashboard", route: "home" },
-      { title: "About", icon: "question_answer", route: "about" }
-    ]
+      { title: "Profile", icon: "person", route: "profile", auth: true },
+      { title: "My Order", icon: "shop_two", route: "my-order", auth: true },
+      { title: "About", icon: "question_answer", route: "about" },
+    ],
   }),
   computed: {
     //   mapping state sidebar menggunakan map getter
     ...mapGetters({
       sideBar: "sideBar",
       user: "auth/user",
-      guest: "auth/guest"
+      guest: "auth/guest",
     }),
     drawer: {
       get() {
@@ -106,8 +110,8 @@ export default {
       },
       set(value) {
         this.setSideBar(value);
-      }
-    }
+      },
+    },
   },
   methods: {
     //   mapping action setSideBar pada store menggunakan map action
@@ -116,7 +120,7 @@ export default {
       setStatusDialog: "dialog/setStatus",
       setComponent: "dialog/setComponent",
       setAuth: "auth/set",
-      setAlert: "alert/set"
+      setAlert: "alert/set",
     }),
     login() {
       this.setStatusDialog(true);
@@ -131,8 +135,8 @@ export default {
     logout() {
       let config = {
         headers: {
-          Authorization: "Bearer " + this.user.api_token
-        }
+          Authorization: "Bearer " + this.user.api_token,
+        },
       };
       this.axios
         .post("/logout", {}, config)
@@ -141,19 +145,19 @@ export default {
           this.setAlert({
             status: true,
             text: "Logout Successfully",
-            type: "success"
+            type: "success",
           });
           this.setSideBar(false);
         })
-        .catch(err => {
+        .catch((err) => {
           let responses = err.response;
           this.setAlert({
             status: true,
             text: responses.data.message,
-            type: "error"
+            type: "error",
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
