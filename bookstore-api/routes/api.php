@@ -54,6 +54,7 @@ Route::prefix('v1')->group(function () {
            Route::post('logout', 'AuthController@logout');
            Route::post('shipping', 'ShopController@shipping');
            Route::post('services', 'ShopController@services');
+           Route::post('payment', 'ShopController@payment');
     });
 });
 Route::middleware(['cors'])->group(function () {

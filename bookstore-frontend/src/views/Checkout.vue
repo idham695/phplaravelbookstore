@@ -136,7 +136,7 @@ export default {
       service: "",
       services: [],
       shippingCost: 0,
-      totalBill: 0
+      totalBill: 0,
     };
   },
   computed: {
@@ -148,14 +148,14 @@ export default {
       countCart: "cart/count",
       totalPrice: "cart/totalPrice",
       totalQuantity: "cart/totalQuantity",
-      totalWeight: "cart/totalWeight"
+      totalWeight: "cart/totalWeight",
     }),
     citiesByProvince() {
       let province_id = this.province_id;
-      return this.cities.filter(function(city) {
+      return this.cities.filter(function (city) {
         if (city.province_id == province_id) return city;
       });
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -163,7 +163,7 @@ export default {
       setAuth: "auth/set",
       setProvices: "region/setProvinces",
       setCities: "region/setCities",
-      setCart: "cart/set"
+      setCart: "cart/set",
     }),
     saveShipping() {
       let formData = new FormData();
@@ -174,25 +174,25 @@ export default {
       formData.set("city_id", this.city_id);
       let config = {
         headers: {
-          Authorization: "Bearer " + this.user.api_token
-        }
+          Authorization: "Bearer " + this.user.api_token,
+        },
       };
       this.axios
         .post("/shipping", formData, config)
-        .then(response => {
+        .then((response) => {
           this.setAuth(response.data.data);
           this.setAlert({
             status: true,
             text: response.data.message,
-            type: "success"
+            type: "success",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           let responses = err.response;
           this.setAlert({
             status: true,
             text: responses.data.message,
-            type: "error"
+            type: "error",
           });
         });
     },
@@ -202,17 +202,17 @@ export default {
 
       let formData = new FormData();
       formData.set("courier", courier);
-      formData.set("cart", encodedCart);
+      formData.set("carts", encodedCart);
 
       let config = {
         headers: {
-          Authorization: "Bearer " + this.user.api_token
-        }
+          Authorization: "Bearer " + this.user.api_token,
+        },
       };
 
       this.axios
         .post("/services", formData, config)
-        .then(result => {
+        .then((result) => {
           let result_data = result.data;
           // Jika tidak error maka data service dan cart akan di update
           if (result_data.status != "error") {
@@ -223,25 +223,25 @@ export default {
           this.setAlert({
             status: "true",
             text: result_data.message,
-            color: result_data.status
+            color: result_data.status,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           let results = err.result;
           this.setAlert({
             status: true,
             text: results.data.message,
-            color: "error"
+            color: "error",
           });
         });
     },
     calculateBill() {
-      let selectedService = this.services.find(service => {
+      let selectedService = this.services.find((service) => {
         return service.service == this.service;
       });
       this.shippingCost = selectedService.cost;
       this.totalBill = parseInt(this.totalPrice) + parseInt(this.shippingCost);
-    }
+    },
   },
   created() {
     (this.name = this.user.name),
@@ -250,18 +250,18 @@ export default {
       (this.city_id = this.user.city_id),
       (this.province_id = this.user.province_id);
     if (this.provinces && this.provinces.length == 0) {
-      this.axios.get("/provinces").then(res => {
+      this.axios.get("/provinces").then((res) => {
         this.setProvices(res.data.data);
       });
-      this.axios.get("/cities").then(res => {
+      this.axios.get("/cities").then((res) => {
         this.setCities(res.data.data);
       });
     }
     if (this.couriers.length == 0) {
-      this.axios.get("/couriers").then(res => {
+      this.axios.get("/couriers").then((res) => {
         this.couriers = res.data.data;
       });
     }
-  }
+  },
 };
 </script>
