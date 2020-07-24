@@ -316,10 +316,10 @@ class ShopController extends Controller
                         throw new \Exception("Courier service unavailable");
                     }
                     $response = json_decode($data_cost['response']);
-                    $costs = $response->rajaongkir->result[0]->$costs;
+                    $costs = $response->rajaongkir->results[0]->costs;
                     $service_cost = 0;
-                    $service_name = $cost->service;
                     foreach ($costs as $cost) {
+                        $service_name = $cost->service;
                         if ($service == $service_name) {
                             $service_cost = $cost->cost[0]->value;
                             break;
@@ -360,6 +360,30 @@ class ShopController extends Controller
             'message' => $message,
             'data' => $data
         ], 200);
+    }
+
+    public function myOrder(Request $request)
+    {
+        $user = Auth::user();
+        $status = 'error';
+        $message = "";
+        $data = [];
+        if ($user) {
+            $orders = Order::select('*')->where('user_id', '=', $user->id)
+            ->orderBy('id','DESC')->get();
+            $status = 'success';
+            $message = "data my order";
+            $data = $orders;
+        } else {
+            $message = "User not found";
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], 200);
+
     }
 
 }
